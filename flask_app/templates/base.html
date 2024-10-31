@@ -12,14 +12,12 @@
             <div class="container">
                 <div class="navbar-brand">{{ self.title() }}</div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <a class="nav-link" href="/">Classement</a>
+                    <a class="nav-link" href="/">Home</a>
                 </ul>
                 {% if 'user' in session %}
                 <form method="POST" action="/logout">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                     <div class="btn-group">
-                        <a href="/team/create" class="btn btn-outline-primary">Créer une équipe</a>
-                        <a href="/match/create" class="btn btn-outline-primary">Créer un match</a>
                         <a href="/change_password" class="btn btn-outline-secondary">Mot de passe</a>
                         <a href="/create_user" class="btn btn-outline-secondary">Créer un utilisateur</a>
                         <span class="btn btn-primary disabled">{{ session['user']['email'] }}</span>
