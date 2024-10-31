@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Double authentification{% endblock %}
+{% block content %}
+{% if request.method == 'POST' %}
+<div class="alert alert-warning">
+  Échec de la double authentification &#9785;
+</div>
+{% endif %}
+<form method="POST">
+    <div class="mb-3">
+      <label for="totp" class="form-label">Code</label>
+      {{ form.totp(id='totp', class_='form-control') }}
+    </div>
+    <button type="submit" class="btn btn-primary">Soumettre</button>
+    {{ form.csrf_token }}
+</form>
+{% endblock %}
