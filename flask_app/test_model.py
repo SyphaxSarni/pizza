@@ -1,6 +1,35 @@
 import pytest
 from flask_app import model
+from flask_app import data
 
+def test_pizzas_and_insert_pizza():
+  connection = model.connect(":memory:")
+  model.create_database(connection)
+  pizzas = data.pizzas()
+  model.insert_pizza(connection, pizzas[3])
+  assert model.pizzas(connection) == [pizzas[3]]
+
+def test_ingredients_and_insert_ingredient():
+  connection = model.connect(":memory:")
+  model.create_database(connection)
+  ingredients = data.ingredients()
+  model.insert_ingredient(connection, ingredients[3])
+  assert model.ingredients(connection) == [ingredients[3]]
+
+def test_recettes_and_insert_recette():
+  connection = model.connect(":memory:")
+  model.create_database(connection)
+  pizzas = data.pizzas()
+  model.insert_pizza(connection, pizzas[4])
+  ingredients = data.ingredients()
+  model.insert_ingredient(connection, ingredients[1])
+  recettes = data.recettes()
+  model.insert_recette(connection, recettes[15])
+  assert model.recettes(connection) == [{
+      'id': pizzas[4]['id'],
+      'name': pizzas[4]['name'],
+      'ingredients': ingredients[1]['name']
+  }]
 
 def test_add_and_get_user():
     connection = model.connect(":memory:")

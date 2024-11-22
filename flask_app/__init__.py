@@ -37,8 +37,24 @@ def login_required(func):
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('home.html')
+    connection=model.connect()
+    return render_template('pizza.html', pizzas=model.pizzas(connection))
 
+@app.route('/ingredient/', methods=['GET'])
+def ingredient():
+    connection=model.connect()
+    return render_template('ingredient.html', ingredients=model.ingredients(connection))
+
+@app.route('/recette/', methods=['GET'])
+def recette():
+    connection=model.connect()
+    return render_template('recette.html', recettes=model.recettes(connection))
+
+
+@app.route('/pizza/<int:pizza_id>', methods=['GET'])
+def pizza(pizza_id):
+  connection = model.connect()
+  return 'Pizza {0}'.format(pizza_id)
 
 class LoginForm(FlaskForm):
   email = EmailField('email', validators=[validators.DataRequired()])

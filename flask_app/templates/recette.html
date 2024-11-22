@@ -1,0 +1,25 @@
+<!Doctype html>
+<html>
+    <head>
+        <body>
+            <br><br>
+            <table class="table table-stripped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Pizza</th>
+                        <th>Ingredients</th>
+                    </tr>
+                </thead>
+            
+                <tbody>
+                    {% for recette in recettes %} 
+                    <tr>
+                       <td>{{recette.p_name}}</td>
+                       <td>{{recette.ingredients}}</td>
+                    </tr>
+                    {% endfor%}
+                </tbody>
+            </table>
+        </body>
+    </head>
+</html>

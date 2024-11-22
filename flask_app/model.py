@@ -1,7 +1,7 @@
 import sqlite3
 import os
 from passlib.hash import scrypt
-
+from flask_app import data  
 
 def dictionary_factory(cursor, row):
   dictionary = {}
@@ -32,10 +32,51 @@ def create_database(connection):
   connection.executescript(script)
   connection.commit()
 
+def pizzas(connection):
+  sql = 'SELECT * FROM pizzas ORDER BY id'
+  cursor = connection.execute(sql)
+  return cursor.fetchall()
+
+def ingredients(connection):
+  sql = 'SELECT * FROM ingredients ORDER BY id'
+  cursor = connection.execute(sql)
+  return cursor.fetchall()
+
+def recettes(connection):
+  sql = ''' SELECT pizzas.name AS p_name, GROUP_CONCAT(ingredients.name, ', ') AS ingredients FROM pizzas
+            LEFT JOIN recettes ON pizzas.id = recettes.id_pizza
+            LEFT JOIN ingredients ON ingredients.id = recettes.id_ingredient
+            GROUP BY pizzas.id
+          '''
+  cursor = connection.cursor()
+  cursor.execute(sql)
+  return cursor.fetchall()
+
+def insert_pizza(connection, pizza):
+  sql = 'INSERT INTO pizzas (id, name) VALUES (:id, :name)'
+  connection.execute(sql, pizza)  
+  connection.commit()
+
+def insert_ingredient(connection, ingredient):
+  sql = 'INSERT INTO ingredients (id, name) VALUES (:id, :name)'
+  connection.execute(sql, ingredient)  
+  connection.commit()
+
+def insert_recette(connection, recette):
+  sql = 'INSERT INTO recettes (id_pizza, id_ingredient) VALUES (:id_pizza, :id_ingredient)'
+  connection.execute(sql, recette)
+  connection.commit()
 
 def fill_database(connection):
-  pass
-
+  pizzas = data.pizzas()
+  for pizza in pizzas:
+    insert_pizza(connection, pizza)
+  ingredients = data.ingredients()
+  for ingredient in ingredients:
+    insert_ingredient(connection, ingredient)
+  recettes = data.recettes()
+  for recette in recettes:
+    insert_recette(connection, recette)
 
 def check_password_strength(password):
   if len(password) < 12:
