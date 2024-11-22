@@ -5,5 +5,4 @@ CREATE TABLE users(
     email VARCHAR(128) NOT NULL UNIQUE,
     password_hash VARCHAR(128) NOT NULL,
     totp VARCHAR(32)
-    test VARCHAR(16)
 );
