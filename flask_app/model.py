@@ -142,7 +142,7 @@ def get_user(connection, password, email=None, username=None):
   password_hash = user['password_hash']
   if not scrypt.verify(password, password_hash):
     raise Exception('Utilisateur inconnu')
-  return {'id': user['id'], 'email': user['email']}
+  return {'id': user['id'], 'email': user['email'], 'pizzaiolo': user['pizzaiolo']}
 
 
 def change_password(connection, email, old_password, new_password):

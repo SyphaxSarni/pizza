@@ -39,8 +39,7 @@ def login_required(func):
 
 @app.route('/', methods=['GET'])
 def home():
-    connection=model.connect()
-    return render_template('pizza.html', pizzas=model.pizzas(connection))
+    return render_template('home.html')
 
 @app.route('/ingredient/', methods=['GET'])
 def ingredient():
@@ -94,10 +93,6 @@ def signin():
     try:
       connection = model.connect()
       user = model.add_user(connection, form.email.data, form.username.data, form.password.data)
-      print(f"adding user {form.email.data} {form.password.data}")
-      if model.totp_enabled(connection, user):
-        session['totp_user'] = user
-        return redirect('/totp')
       session['user'] = user
       return redirect('/')
     except Exception as exception:

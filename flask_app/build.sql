@@ -8,6 +8,7 @@ CREATE TABLE users(
     email VARCHAR(128) NOT NULL UNIQUE,
     username VARCHAR(128) NOT NULL UNIQUE,
     password_hash VARCHAR(128) NOT NULL,
+    pizzaiolo BOOLEAN DEFAULT FALSE,
     totp VARCHAR(32)
 );
 
