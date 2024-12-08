@@ -1,5 +1,7 @@
 import os
 from flask import Flask, flash, render_template, redirect, request, session
+from wtforms.fields.simple import TextAreaField
+
 from flask_app import model
 import datetime
 from flask_wtf import CSRFProtect, FlaskForm
@@ -57,7 +59,13 @@ def pizza(pizza_id):
   return 'Pizza {0}'.format(pizza_id)
 
 class LoginForm(FlaskForm):
-  email = EmailField('email', validators=[validators.DataRequired()])
+  email = EmailField('email')
+  username = StringField("username", validators=[validators.DataRequired()])
+  password = PasswordField('password', validators=[validators.DataRequired()])
+
+class SigninForm(FlaskForm):
+  email = EmailField("email", validators=[validators.DataRequired()])
+  username = StringField("username", validators=[validators.DataRequired()])
   password = PasswordField('password', validators=[validators.DataRequired()])
 
 
@@ -67,7 +75,7 @@ def login():
   if form.validate_on_submit():
     try:
       connection = model.connect()
-      user = model.get_user(connection, form.email.data, form.password.data)
+      user = model.get_user(connection, username=form.username.data, password=form.password.data)
       if model.totp_enabled(connection, user):
         session['totp_user'] = user
         return redirect('/totp')
@@ -76,6 +84,26 @@ def login():
     except Exception as exception:
       app.log_exception(exception)
   return render_template('login.html', form=form)
+
+@app.route('/signin', methods=['GET', 'POST'])
+def signin():
+  if 'user' in session:
+    return redirect('/')
+  form = SigninForm()
+  if form.validate_on_submit():
+    try:
+      connection = model.connect()
+      user = model.add_user(connection, form.email.data, form.username.data, form.password.data)
+      print(f"adding user {form.email.data} {form.password.data}")
+      if model.totp_enabled(connection, user):
+        session['totp_user'] = user
+        return redirect('/totp')
+      session['user'] = user
+      return redirect('/')
+    except Exception as exception:
+      app.log_exception("ERREUR")
+      app.log_exception(exception)
+  return render_template('inscription.html', form=form)
 
 
 @app.route('/logout', methods = ['POST'])
