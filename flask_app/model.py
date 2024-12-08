@@ -12,7 +12,7 @@ def dictionary_factory(cursor, row):
 
 
 def connect(database = "database.sqlite"):
-  connection = sqlite3.connect(database)
+  connection = sqlite3.connect(database,timeout=15)
   connection.set_trace_callback(print)
   connection.execute('PRAGMA foreign_keys = 1')
   connection.row_factory = dictionary_factory
@@ -106,25 +106,35 @@ def hash_password(password):
   return scrypt.using(salt_size=16).hash(password)
 
 
-def add_user(connection, email, password):
+def add_user(connection, email, username, password):
   password_hash = hash_password(password)
   sql = '''
-    INSERT INTO users(email, password_hash)
-    VALUES (:email, :password_hash);
+    INSERT INTO users(email, username, password_hash)
+    VALUES (:email, :username, :password_hash);
   '''
   connection.execute(sql, {
     'email' : email,
+    'username' : username,
     'password_hash': password_hash
   })
   connection.commit()
 
 
-def get_user(connection, email, password):
-  sql = '''
-    SELECT * FROM users
-    WHERE email = :email;
-  '''
-  cursor = connection.execute(sql, {'email': email})
+def get_user(connection, password, email=None, username=None):
+
+  if username is None:
+    sql = '''
+      SELECT * FROM users
+      WHERE email = :email;
+    '''
+    cursor = connection.execute(sql, {'email': email})
+  else:
+    sql = '''
+          SELECT * FROM users
+          WHERE username = :username;
+    '''
+    cursor = connection.execute(sql, {'username': username})
+
   users = cursor.fetchall()
   if len(users)==0:
     raise Exception('Utilisateur inconnu')
@@ -136,7 +146,7 @@ def get_user(connection, email, password):
 
 
 def change_password(connection, email, old_password, new_password):
-  user = get_user(connection, email, old_password)
+  user = get_user(connection, email=email, password=old_password)
   password_hash = hash_password(new_password)
   sql = '''
     UPDATE users

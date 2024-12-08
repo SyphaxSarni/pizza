@@ -34,10 +34,10 @@ def test_recettes_and_insert_recette():
 def test_add_and_get_user():
     connection = model.connect(":memory:")
     model.create_database(connection)
-    model.add_user(connection, 'test1@example.com', '1Secret1234**')
-    model.add_user(connection, 'test2@example.com', '2Secret1234**')
-    user1 = model.get_user(connection, 'test1@example.com', '1Secret1234**')
-    user2 = model.get_user(connection, 'test2@example.com', '2Secret1234**')
+    model.add_user(connection, email='test1@example.com', username="test1", password='1Secret1234**')
+    model.add_user(connection, email='test2@example.com', username="test2", password='2Secret1234**')
+    user1 = model.get_user(connection, email='test1@example.com', password='1Secret1234**')
+    user2 = model.get_user(connection, email='test2@example.com', password='2Secret1234**')
     assert user1 == {'id' : 1, 'email' : 'test1@example.com'}
     assert user2 == {'id' : 2, 'email' : 'test2@example.com'}
 
@@ -45,15 +45,15 @@ def test_add_and_get_user():
 def test_get_user_exception():
     connection = model.connect(":memory:")
     model.create_database(connection)
-    model.add_user(connection, 'test@example.com', 'Secret1234**')
+    model.add_user(connection,  email='test@example.com', password='Secret1234**')
     with pytest.raises(Exception) as exception_info:
-        model.get_user(connection, 'test1@example.com', 'Secret1234**')
+        model.get_user(connection,  email='test1@example.com', password='Secret1234**')
     assert str(exception_info.value) == 'Utilisateur inconnu'
     with pytest.raises(Exception) as exception_info:
-        model.get_user(connection, 'test@example.com', '1Secret1234**')
+        model.get_user(connection,  email='test@example.com', password='1Secret1234**')
     assert str(exception_info.value) == 'Utilisateur inconnu'
     with pytest.raises(Exception) as exception_info:
-        model.get_user(connection, 'test1@example.com', '1Secret1234**')
+        model.get_user(connection,  email='test1@example.com', password='1Secret1234**')
     assert str(exception_info.value) == 'Utilisateur inconnu'
 
 

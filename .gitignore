@@ -7,3 +7,6 @@ flask_session
 venv
 .venv
 .vscode
+Directives/*
+.idea*
+.env
