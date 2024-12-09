@@ -106,16 +106,17 @@ def hash_password(password):
   return scrypt.using(salt_size=16).hash(password)
 
 
-def add_user(connection, email, username, password):
+def add_user(connection, email, username, password, pizzaiolo=0):
   password_hash = hash_password(password)
   sql = '''
-    INSERT INTO users(email, username, password_hash)
-    VALUES (:email, :username, :password_hash);
+    INSERT INTO users(email, username, password_hash, pizzaiolo)
+    VALUES (:email, :username, :password_hash, :pizzaiolo);
   '''
   connection.execute(sql, {
     'email' : email,
     'username' : username,
-    'password_hash': password_hash
+    'password_hash': password_hash,
+    'pizzaiolo': pizzaiolo
   })
   connection.commit()
 
