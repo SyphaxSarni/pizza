@@ -1,24 +1,30 @@
-<!Doctype html>
-<html>
-    <head>
-        <body>
-            <br><br>
-            <table class="table table-stripped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>N°</th>
-                        <th>Ingredients</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for ingredient in ingredients %} 
-                    <tr>
-                       <td>{{ingredient['id']}}</td>
-                       <td>{{ingredient['name']}}</td>
-                    </tr>
-                    {% endfor%}
-                </tbody>
-            </table>
-        </body>
-    </head>
-</html>
+{% extends "base.html" %}
+{% block title %}Changement du mot de passe{% endblock %}
+{% block content %}
+<table class="table table-stripped">
+    <thead class="table-dark">
+        <tr>
+            <th>N°</th>
+            <th>Ingredients</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ingredient in ingredients %}
+        <tr>
+           <td>{{ingredient['id']}}</td>
+           <td>{{ingredient['name']}}</td>
+        </tr>
+        {% endfor%}
+    </tbody>
+</table>
+{% if pizzaiolo == 1 %}
+<form method='POST'>
+    <div class="mb-3">
+        <label for="name" class="form-label">Ajouter un ingrédient</label>
+        {{ form.name(id='ingredient', class_ = 'form-control') }}
+    </div>
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+    {{ form.csrf_token }}
+</form>
+{% endif %}
+{% endblock %}

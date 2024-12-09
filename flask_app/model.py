@@ -120,6 +120,16 @@ def add_user(connection, email, username, password, pizzaiolo=0):
   })
   connection.commit()
 
+def add_ingredient(connection, name):
+  sql = '''
+    INSERT INTO ingredients(name)
+    VALUES (:name);
+  '''
+  connection.execute(sql, {
+    'name' : name
+  })
+  connection.commit()
+
 
 def get_user(connection, password, email=None, username=None):
 

@@ -41,10 +41,20 @@ def login_required(func):
 def home():
     return render_template('home.html')
 
-@app.route('/ingredient/', methods=['GET'])
+class IngredientForm(FlaskForm):
+  name = StringField("name", validators=[validators.DataRequired()])
+
+@app.route('/ingredient/', methods=['GET', 'POST'])
 def ingredient():
-    connection=model.connect()
-    return render_template('ingredient.html', ingredients=model.ingredients(connection))
+  form = IngredientForm()
+  connection = model.connect()
+  if form.validate_on_submit():
+    try:
+      print(f"name = {form.name.data}", flush=True)
+      model.add_ingredient(connection=connection,name=form.name.data)
+    except Exception as e :
+      app.log_exception(e)
+  return render_template('ingredient.html', ingredients=model.ingredients(connection), pizzaiolo=session["user"]["pizzaiolo"], form=form)
 
 @app.route('/recette/', methods=['GET'])
 def recette():
@@ -96,7 +106,6 @@ def signin():
       session['user'] = user
       return redirect('/')
     except Exception as exception:
-      app.log_exception("ERREUR")
       app.log_exception(exception)
   return render_template('inscription.html', form=form)
 
