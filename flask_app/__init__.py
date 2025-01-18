@@ -51,10 +51,10 @@ def ingredient():
   var = request.args.get("success")
   if not var is None:
     if (var == '1'):
-      flash("Suppression réussie.", category="success")
+      flash("Modification réussie.", category="success")
       return redirect(request.path, code=302)
     else:
-      flash("Erreur lors de la suppression", category="danger")
+      flash("Erreur lors de la modification", category="danger")
       return redirect(request.path, code=302)
   if form.validate_on_submit():
     try:
