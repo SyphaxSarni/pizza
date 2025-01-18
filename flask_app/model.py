@@ -140,6 +140,18 @@ def delete_ingredient(connection, id):
   })
   connection.commit()
 
+def change_ingredient_availabilite(connection, id, availabilite):
+  sql = '''
+      UPDATE ingredients
+      SET available = (:availabilite)
+      WHERE id = (:id)
+    '''
+  connection.execute(sql, {
+    'id': id,
+    'availabilite': availabilite
+  })
+  connection.commit()
+
 
 def get_user(connection, password, email=None, username=None):
 

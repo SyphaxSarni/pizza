@@ -13,25 +13,25 @@ def pizzas():
 
 def ingredients():
     return [
-        {'id': 1, 'name': 'Sauce tomates'},
-        {'id': 2, 'name': 'Mozzarella'},
-        {'id': 3, 'name': 'Pepperoni'},
-        {'id': 4, 'name': 'Jambon'},
-        {'id': 5, 'name': 'Champignon'},
-        {'id': 6, 'name': 'Gorgonzola'},
-        {'id': 7, 'name': 'Chèvre'},
-        {'id': 8, 'name': 'Miel'},
-        {'id': 9, 'name': 'Parmesan'},
-        {'id': 10, 'name': 'Ananas'},
-        {'id': 12, 'name': 'Poivron'},
-        {'id': 13, 'name': 'Basilic'},
-        {'id': 14, 'name': 'Boeuf haché'},
-        {'id': 15, 'name': 'Jalapenos'},
-        {'id': 16, 'name': 'Crème fraiche'},
-        {'id': 17, 'name': 'Saumon fumé'},
-        {'id': 18, 'name': 'Olives noirs'},
-        {'id': 19, 'name': 'Maïs'},
-        {'id': 20, 'name': 'Oignon'}]
+        {'id': 1, 'name': 'Sauce tomates', 'available': True},
+        {'id': 2, 'name': 'Mozzarella', 'available': True},
+        {'id': 3, 'name': 'Pepperoni', 'available': True},
+        {'id': 4, 'name': 'Jambon', 'available': True},
+        {'id': 5, 'name': 'Champignon', 'available': True},
+        {'id': 6, 'name': 'Gorgonzola', 'available': True},
+        {'id': 7, 'name': 'Chèvre', 'available': True},
+        {'id': 8, 'name': 'Miel', 'available': True},
+        {'id': 9, 'name': 'Parmesan', 'available': True},
+        {'id': 10, 'name': 'Ananas', 'available': True},
+        {'id': 12, 'name': 'Poivron', 'available': True},
+        {'id': 13, 'name': 'Basilic', 'available': True},
+        {'id': 14, 'name': 'Boeuf haché', 'available': True},
+        {'id': 15, 'name': 'Jalapenos', 'available': True},
+        {'id': 16, 'name': 'Crème fraiche', 'available': True},
+        {'id': 17, 'name': 'Saumon fumé', 'available': True},
+        {'id': 18, 'name': 'Olives noirs', 'available': True},
+        {'id': 19, 'name': 'Maïs', 'available': True},
+        {'id': 20, 'name': 'Oignon', 'available': True}]
 
 def recettes():
     return [

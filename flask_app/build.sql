@@ -19,7 +19,8 @@ CREATE TABLE pizzas(
 
 CREATE TABLE ingredients(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(20) NOT NULL
+    name VARCHAR(20) NOT NULL,
+    available BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE recettes(

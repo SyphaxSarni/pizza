@@ -215,3 +215,15 @@ def delete_ingredient_route():
     return redirect('/ingredient?success=1')
   except Exception as e :
     return redirect('/ingredient?success=0')
+
+@app.route('/availabilite', methods=['GET'])
+def change_availabilite():
+  try:
+    ingredient_id = request.args.get("ingredient_id")
+    value = request.args.get("value") == "True"
+    connection = model.connect()
+    model.change_ingredient_availabilite(connection, ingredient_id, value)
+    return redirect('/ingredient?success=1')
+  except Exception as e:
+    return redirect('/ingredient?success=0')
+
