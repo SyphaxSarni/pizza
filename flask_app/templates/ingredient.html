@@ -1,18 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Changement du mot de passe{% endblock %}
+{% block title %}Liste des ingrédients {% endblock %}
 {% block content %}
 <table class="table table-stripped">
     <thead class="table-dark">
         <tr>
             <th>N°</th>
             <th>Ingredients</th>
+            <th>Gérer</th>
         </tr>
     </thead>
     <tbody>
         {% for ingredient in ingredients %}
         <tr>
-           <td>{{ingredient['id']}}</td>
-           <td>{{ingredient['name']}}</td>
+            <td>{{ingredient['id']}}</td>
+            <td>{{ingredient['name']}}</td>
+            <td><a href="/delete?ingredient_id={{ingredient['id']}}"><button type="submit" class="btn btn-primary">Supprimer</button></a></td>
         </tr>
         {% endfor%}
     </tbody>

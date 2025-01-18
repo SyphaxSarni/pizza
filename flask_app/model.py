@@ -130,6 +130,16 @@ def add_ingredient(connection, name):
   })
   connection.commit()
 
+def delete_ingredient(connection, id):
+  sql = '''
+    DELETE FROM ingredients
+    WHERE id = (:id)
+  '''
+  connection.execute(sql, {
+    'id' : id
+  })
+  connection.commit()
+
 
 def get_user(connection, password, email=None, username=None):
 

@@ -48,11 +48,21 @@ class IngredientForm(FlaskForm):
 def ingredient():
   form = IngredientForm()
   connection = model.connect()
+  var = request.args.get("success")
+  if not var is None:
+    if (var == '1'):
+      flash("Suppression réussie.", category="success")
+      return redirect(request.path, code=302)
+    else:
+      flash("Erreur lors de la suppression", category="danger")
+      return redirect(request.path, code=302)
   if form.validate_on_submit():
     try:
-      print(f"name = {form.name.data}", flush=True)
       model.add_ingredient(connection=connection,name=form.name.data)
+      flash("Ajout réussie.", category="success")
+      return redirect(request.path, code=302)
     except Exception as e :
+      flash("Erreur lors de l'ajout.", category="danger")
       app.log_exception(e)
   return render_template('ingredient.html', ingredients=model.ingredients(connection), pizzaiolo=session["user"]["pizzaiolo"], form=form)
 
@@ -120,7 +130,7 @@ def logout():
 
 class PasswordChangeForm(FlaskForm):
   old_password = PasswordField('old_password', validators=[validators.DataRequired()])
-  new_password = PasswordField('new_password', validators=[validators.DataRequired(), 
+  new_password = PasswordField('new_password', validators=[validators.DataRequired(),
                                                            validators.EqualTo('password_confirm')])
   password_confirm = PasswordField('password_confirm', validators=[validators.DataRequired()])
   totp_enabled = BooleanField('totp_enabled')
@@ -150,7 +160,7 @@ def change_password():
 
 class UserCreationForm(FlaskForm):
   email = EmailField('email', validators=[validators.DataRequired()])
-  password = PasswordField('password', validators=[validators.DataRequired(), 
+  password = PasswordField('password', validators=[validators.DataRequired(),
                                                    validators.EqualTo('confirm')])
   confirm = PasswordField('confirm', validators=[validators.DataRequired()])
 
@@ -172,7 +182,7 @@ def create_user():
 
 class TotpForm(FlaskForm):
   totp = StringField('totp', validators=[
-     validators.DataRequired(), 
+     validators.DataRequired(),
      validators.Length(min=6, max=6)])
 
 
@@ -195,3 +205,13 @@ def totp():
     except Exception as exception:
       app.log_exception(exception)
   return render_template('totp.html', form=form)
+
+@app.route('/delete', methods=['GET'])
+def delete_ingredient_route():
+  try:
+    ingredient_id = request.args.get("ingredient_id")
+    connection = model.connect()
+    model.delete_ingredient(connection, ingredient_id)
+    return redirect('/ingredient?success=1')
+  except Exception as e :
+    return redirect('/ingredient?success=0')
