@@ -248,7 +248,7 @@ def totp():
       app.log_exception(exception)
   return render_template('totp.html', form=form)
 
-@app.route('/delete', methods=['GET'])
+@app.route('/delete_ingredient', methods=['GET'])
 def delete_ingredient_route():
   try:
     ingredient_id = request.args.get("ingredient_id")

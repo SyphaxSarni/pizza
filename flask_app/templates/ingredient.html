@@ -20,7 +20,7 @@
             <td>{{ingredient['name']}}</td>
             <td>{{ 'Oui' if ingredient['available'] else 'Non'}}</td>
             {% if pizzaiolo == 1 %}
-                <td><a href="/delete?ingredient_id={{ ingredient['id'] }}&"><button type="submit" class="btn btn-primary">Supprimer</button></a></td>
+                <td><a href="/delete_ingredient?ingredient_id={{ ingredient['id'] }}&"><button type="submit" class="btn btn-primary">Supprimer</button></a></td>
                 <td><a href="/availabilite?ingredient_id={{ ingredient['id'] }}&value={{ not ingredient['available'] }}"><button type="submit" class="btn btn-primary">Changer</button></a></td>
             {% endif %}
         </tr>
