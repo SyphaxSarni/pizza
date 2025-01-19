@@ -7,8 +7,10 @@
             <th>N°</th>
             <th>Ingredients</th>
             <th>Disponible</th>
-            <th>Suppression</th>
-            <th>Disponibilité</th>
+            {% if pizzaiolo == 1 %}
+                <th>Suppression</th>
+                <th>Disponibilité</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -17,8 +19,10 @@
             <td>{{ingredient['id']}}</td>
             <td>{{ingredient['name']}}</td>
             <td>{{ 'Oui' if ingredient['available'] else 'Non'}}</td>
-            <td><a href="/delete?ingredient_id={{ ingredient['id'] }}&"><button type="submit" class="btn btn-primary">Supprimer</button></a></td>
-            <td><a href="/availabilite?ingredient_id={{ ingredient['id'] }}&value={{ not ingredient['available'] }}"><button type="submit" class="btn btn-primary">Changer</button></a></td>
+            {% if pizzaiolo == 1 %}
+                <td><a href="/delete?ingredient_id={{ ingredient['id'] }}&"><button type="submit" class="btn btn-primary">Supprimer</button></a></td>
+                <td><a href="/availabilite?ingredient_id={{ ingredient['id'] }}&value={{ not ingredient['available'] }}"><button type="submit" class="btn btn-primary">Changer</button></a></td>
+            {% endif %}
         </tr>
         {% endfor%}
     </tbody>

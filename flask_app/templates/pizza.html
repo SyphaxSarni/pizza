@@ -21,4 +21,56 @@
         {% endfor%}
     </tbody>
 </table>
+
+{% if pizzaiolo == 1 %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Ajouter une nouvelle pizza</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nom de la pizza *</label>
+                                {{ form.name(id='name', class_ = 'form-control') }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Prix (€) *</label>
+                                {{ form.price(id='price', class_ = 'form-control') }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description *</label>
+                                {{ form.description(id='description', class_ = 'form-control') }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Ingrédients *</label>
+                                <div class="row g-3">
+                                    {% for subfield in form.ingredients %}
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            {{ subfield(class_="form-check-input") }}
+                                            {{ subfield.label(class_="form-check-label") }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Ajouter la pizza</button>
+                                {{ form.csrf_token }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 {% endblock %}

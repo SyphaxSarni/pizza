@@ -130,6 +130,29 @@ def add_ingredient(connection, name):
   })
   connection.commit()
 
+def add_pizza(connection, name, price, description):
+  sql = '''
+    INSERT INTO pizzas (name, price, description) 
+    VALUES (:name, :price, :description)
+  '''
+  connection.execute(sql, {
+    'name' : name,
+    'price' : price,
+    'description' : description
+  })
+  connection.commit()
+
+def add_pizza_ingredient(connection, id_pizza, id_ingredient):
+  sql = '''
+    INSERT INTO recettes(id_pizza, id_ingredient) 
+    VALUES (:id_pizza, :id_ingredient)
+  '''
+  connection.execute(sql, {
+    'id_pizza' : id_pizza,
+    'id_ingredient' : id_ingredient
+  })
+  connection.commit()
+
 def delete_ingredient(connection, id):
   sql = '''
     DELETE FROM ingredients
@@ -221,3 +244,11 @@ def totp_secret(connection, user):
   if len(rows) == 0:
     raise Exception("Échec de la double authentification")
   return rows[0]['totp']
+
+def get_last_id(connection, table):
+  sql = f'''
+    SELECT max(id) FROM {table}
+  '''
+
+  result = connection.execute(sql).fetchone()
+  return result['max(id)']

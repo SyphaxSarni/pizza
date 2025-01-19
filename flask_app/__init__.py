@@ -1,11 +1,12 @@
 import os
 from flask import Flask, flash, render_template, redirect, request, session
 from wtforms.fields.simple import TextAreaField
+from wtforms.widgets import CheckboxInput, ListWidget
 
 from flask_app import model
 import datetime
 from flask_wtf import CSRFProtect, FlaskForm
-from wtforms import BooleanField, StringField, SelectField, PasswordField, DateField, TimeField, IntegerField, EmailField, validators
+from wtforms import BooleanField, StringField, SelectMultipleField, PasswordField, DateField, TimeField, IntegerField, EmailField, validators, FloatField, FieldList
 from flask_session import Session
 from functools import wraps
 from flask_talisman import Talisman
@@ -44,6 +45,16 @@ def home():
 class IngredientForm(FlaskForm):
   name = StringField("name", validators=[validators.DataRequired()])
 
+
+class PizzaForm(FlaskForm):
+  name = StringField("name", validators=[validators.DataRequired()])
+  price = FloatField("price", validators=[validators.DataRequired()])
+  description = StringField(label="description")
+  ingredients = SelectMultipleField('ingredients', coerce=int,
+                                    widget=ListWidget(prefix_label=False),
+                                    option_widget=CheckboxInput())
+
+
 @app.route('/ingredient/', methods=['GET', 'POST'])
 def ingredient():
   form = IngredientForm()
@@ -77,10 +88,35 @@ def pizza(pizza_id):
   connection = model.connect()
   return 'Pizza {0}'.format(pizza_id)
 
-@app.route('/pizza', methods=['GET'])
+@app.route('/pizza', methods=['GET', 'POST'])
 def pizza_list():
+  form = PizzaForm()
   connection = model.connect()
-  return render_template('pizza.html',pizzas=model.pizzas(connection))
+
+  ingredients_list = model.ingredients(connection)
+
+  # Créer les choix pour le champ ingredients
+  form = PizzaForm()
+  form.ingredients.choices = [(i['id'], i['name']) for i in ingredients_list]
+
+  if form.validate_on_submit():
+    try:
+      # Ajouter la pizza
+      model.add_pizza(
+        connection=connection,
+        name=form.name.data,
+        price=form.price.data,
+        description=form.description.data
+      )
+      pizza_id = model.get_last_id(connection=connection, table='pizzas')
+      # Ajouter les ingrédients sélectionnés
+      for ingredient_id in form.ingredients.data:
+        model.add_pizza_ingredient(connection, pizza_id, ingredient_id)
+      flash("Ajout réussie.", category="success")
+    except Exception as e :
+      flash("Erreur lors de l'ajout.", category="danger")
+      app.log_exception(e)
+  return render_template('pizza.html',pizzas=model.pizzas(connection), ingredients=model.ingredients(connection), pizzaiolo=session["user"]["pizzaiolo"], form=form)
 
 class LoginForm(FlaskForm):
   email = EmailField('email')
@@ -118,6 +154,7 @@ def signin():
     try:
       connection = model.connect()
       user = model.add_user(connection, form.email.data, form.username.data, form.password.data)
+      user["pizzaiolo"] = 0
       session['user'] = user
       return redirect('/')
     except Exception as exception:
