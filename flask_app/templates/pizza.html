@@ -8,6 +8,9 @@
             <th>Pizza</th>
             <th>Prix</th>
             <th>Description</th>
+            {% if pizzaiolo == 1 %}
+                <th>Suppression</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -17,6 +20,9 @@
            <td>{{pizza['name']}}</td>
            <td>{{pizza['price']}} €</td>
            <td>{{pizza['description']}}</td>
+            {% if pizzaiolo == 1 %}
+                <td><a href="/delete_pizza?pizza_id={{ pizza['id'] }}"><button type="submit" class="btn btn-primary">Supprimer</button></a></td>
+            {% endif %}
         </tr>
         {% endfor%}
     </tbody>

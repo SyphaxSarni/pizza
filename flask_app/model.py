@@ -153,6 +153,16 @@ def add_pizza_ingredient(connection, id_pizza, id_ingredient):
   })
   connection.commit()
 
+def delete_pizza(connection, id):
+  sql = '''
+    DELETE FROM pizzas
+    WHERE id = (:id)
+  '''
+  connection.execute(sql, {
+    'id' : id
+  })
+  connection.commit()
+
 def delete_ingredient(connection, id):
   sql = '''
     DELETE FROM ingredients

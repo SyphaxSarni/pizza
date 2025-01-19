@@ -28,7 +28,8 @@ CREATE TABLE ingredients(
 CREATE TABLE recettes(
     id_pizza INTEGER NOT NULL,
     id_ingredient INTEGER NOT NULL,
-    FOREIGN KEY (id_pizza) REFERENCES pizzas(id),
+    FOREIGN KEY (id_pizza) REFERENCES pizzas(id)
+        ON DELETE CASCADE,
     FOREIGN KEY (id_ingredient) REFERENCES ingredients(id),
     PRIMARY KEY (id_pizza, id_ingredient)
 );

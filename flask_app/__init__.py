@@ -98,6 +98,14 @@ def pizza_list():
   # Créer les choix pour le champ ingredients
   form = PizzaForm()
   form.ingredients.choices = [(i['id'], i['name']) for i in ingredients_list]
+  var = request.args.get("success")
+  if not var is None:
+    if (var == '1'):
+      flash("Modification réussie.", category="success")
+      return redirect(request.path, code=302)
+    else:
+      flash("Erreur lors de la modification", category="danger")
+      return redirect(request.path, code=302)
 
   if form.validate_on_submit():
     try:
@@ -257,6 +265,16 @@ def delete_ingredient_route():
     return redirect('/ingredient?success=1')
   except Exception as e :
     return redirect('/ingredient?success=0')
+
+@app.route('/delete_pizza', methods=['GET'])
+def delete_pizza_route():
+  try:
+    pizza_id = request.args.get("pizza_id")
+    connection = model.connect()
+    model.delete_pizza(connection, pizza_id)
+    return redirect('/pizza?success=1')
+  except Exception as e :
+    return redirect('/pizza?success=0')
 
 @app.route('/availabilite', methods=['GET'])
 def change_availabilite():
