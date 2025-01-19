@@ -53,7 +53,7 @@ def recettes(connection):
   return cursor.fetchall()
 
 def insert_pizza(connection, pizza):
-  sql = 'INSERT INTO pizzas (id, name) VALUES (:id, :name)'
+  sql = 'INSERT INTO pizzas (id, name, price, description) VALUES (:id, :name, :price, :description)'
   connection.execute(sql, pizza)  
   connection.commit()
 

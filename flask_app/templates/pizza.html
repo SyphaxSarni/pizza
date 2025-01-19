@@ -1,24 +1,24 @@
-<!Doctype html>
-<html>
-    <head>
-        <body>
-            <br><br>
-            <table class="table table-stripped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>N°</th>
-                        <th>Pizza</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for pizza in pizzas %} 
-                    <tr>
-                       <td>{{pizza['id']}}</td>
-                       <td>{{pizza['name']}}</td>
-                    </tr>
-                    {% endfor%}
-                </tbody>
-            </table>
-        </body>
-    </head>
-</html>
+{% extends "base.html" %}
+{% block title %}Liste des pizzas {% endblock %}
+{% block content %}
+<table class="table table-stripped">
+    <thead class="table-dark">
+        <tr>
+            <th>N°</th>
+            <th>Pizza</th>
+            <th>Prix</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pizza in pizzas %}
+        <tr>
+           <td>{{pizza['id']}}</td>
+           <td>{{pizza['name']}}</td>
+           <td>{{pizza['price']}} €</td>
+           <td>{{pizza['description']}}</td>
+        </tr>
+        {% endfor%}
+    </tbody>
+</table>
+{% endblock %}

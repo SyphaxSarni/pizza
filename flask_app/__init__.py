@@ -77,6 +77,11 @@ def pizza(pizza_id):
   connection = model.connect()
   return 'Pizza {0}'.format(pizza_id)
 
+@app.route('/pizza', methods=['GET'])
+def pizza_list():
+  connection = model.connect()
+  return render_template('pizza.html',pizzas=model.pizzas(connection))
+
 class LoginForm(FlaskForm):
   email = EmailField('email')
   username = StringField("username", validators=[validators.DataRequired()])

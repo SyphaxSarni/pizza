@@ -14,7 +14,9 @@ CREATE TABLE users(
 
 CREATE TABLE pizzas(
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name VARCHAR(20) NOT NULL
+  name VARCHAR(20) NOT NULL,
+  price FLOAT NOT NULL,
+  description VARCHAR(256) 
 );
 
 CREATE TABLE ingredients(
