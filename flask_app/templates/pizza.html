@@ -8,39 +8,40 @@
             <th>Pizza</th>
             <th>Prix</th>
             <th>Description</th>
-            {% if pizzaiolo == 1 %}
-                <th>Suppression</th>
-            {% endif %}
+            <th>Actions</th>
+
         </tr>
     </thead>
     <tbody>
         {% for pizza in pizzas %}
         {% set ingredient_ids = pizza["ingredient_ids"].split(',') %}
-        <tr>
+        <tr class="{{ 'table-secondary' if pizza['disponible'] == 0 }}">
            <td>{{pizza['id']}}</td>
-           <td>{{pizza['name']}}</td>
+           <td>{{pizza['name']}} </td>
            <td>{{pizza['price']}} €</td>
            <td>{{pizza['description']}}</td>
-            {% if pizzaiolo == 1 %}
+
                 <td>
                     <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal"
                             data-bs-target="#editModal{{pizza['id']}}">
-                        Modifier
+                        {{ 'Modifier' if pizzaiolo == 1 else 'Consulter' }}
                     </button>
+                    {% if pizzaiolo == 1 %}
                     <a href="/delete_pizza?pizza_id={{ pizza['id'] }}">
                         <button type="button" class="btn btn-danger">Supprimer</button>
                     </a>
+                    {% endif %}
                 </td>
-            {% endif %}
+
         </tr>
 
         <!-- Modal pour édition -->
-        {% if pizzaiolo == 1 %}
+
         <div class="modal fade" id="editModal{{pizza['id']}}" tabindex="-1" aria-labelledby="editModalLabel{{pizza['id']}}" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel{{pizza['id']}}">Modifier la pizza</h5>
+                        <h5 class="modal-title" id="editModalLabel{{pizza['id']}}">{{ 'Modifier la pizza' if pizzaiolo == 1 else 'Consulter pizza'}} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -48,19 +49,19 @@
                             <div class="mb-3">
                                 <label for="edit_name{{pizza['id']}}" class="form-label">Nom de la pizza *</label>
                                 <input type="text" class="form-control" id="edit_name{{pizza['id']}}"
-                                       name="name" value="{{pizza['name']}}" required>
+                                       name="name" value="{{pizza['name']}}" required {{ 'readonly' if pizzaiolo != 1 }}>
                             </div>
 
                             <div class="mb-3">
                                 <label for="edit_price{{pizza['id']}}" class="form-label">Prix (€) *</label>
                                 <input type="number" step="0.1" class="form-control" id="edit_price{{pizza['id']}}"
-                                       name="price" value="{{pizza['price']}}" required>
+                                       name="price" value="{{pizza['price']}}" required {{ 'readonly' if pizzaiolo != 1 }}>
                             </div>
 
                             <div class="mb-3">
                                 <label for="edit_description{{pizza['id']}}" class="form-label">Description</label>
                                 <input type="text" class="form-control" id="edit_description{{pizza['id']}}"
-                                       name="description" value="{{pizza['description']}}">
+                                       name="description" value="{{pizza['description']}}" {{ 'readonly' if pizzaiolo != 1 }}>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Ingrédients *</label>
@@ -70,7 +71,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
                                                    name="ingredients" value="{{ ingredient['id'] }}"
-                                                {% if ingredient['id']|string in ingredient_ids %}checked{% endif %}>
+                                                {% if ingredient['id']|string in ingredient_ids %}checked{% endif %} {{ 'disabled' if pizzaiolo != 1 }}>
                                             <label class="form-check-label">
                                                 {{ ingredient['name'] }}
                                             </label>
@@ -79,17 +80,17 @@
                                     {% endfor %}
                                 </div>
                             </div>
-
+                            {% if pizzaiolo == 1 %}
                             <div class="d-grid gap-2">
                                 {{ form.csrf_token }}
                                 <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
                             </div>
+                            {% endif %}
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
         {% endfor%}
     </tbody>
 </table>

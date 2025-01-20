@@ -162,10 +162,8 @@ def signin():
   if form.validate_on_submit():
     try:
       connection = model.connect()
-      user = model.add_user(connection, form.email.data, form.username.data, form.password.data)
-      user["pizzaiolo"] = 0
-      session['user'] = user
-      return redirect('/')
+      model.add_user(connection, form.email.data, form.username.data, form.password.data)
+      return redirect('/signin')
     except Exception as exception:
       app.log_exception(exception)
   return render_template('inscription.html', form=form)

@@ -34,9 +34,13 @@ def create_database(connection):
 
 def pizzas(connection):
   sql = """
-        SELECT p.*, GROUP_CONCAT(re.id_ingredient, ',') as ingredient_ids
+        SELECT 
+            p.*,
+            GROUP_CONCAT(re.id_ingredient, ',') as ingredient_ids,
+            MIN(i.available) = 1 as disponible
         FROM pizzas p
         LEFT JOIN recettes re ON p.id = re.id_pizza
+        LEFT JOIN ingredients i ON re.id_ingredient = i.id
         GROUP BY p.id
   """
   cursor = connection.execute(sql)
