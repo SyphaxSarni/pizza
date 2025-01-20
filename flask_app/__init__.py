@@ -121,6 +121,7 @@ def pizza_list():
       for ingredient_id in form.ingredients.data:
         model.add_pizza_ingredient(connection, pizza_id, ingredient_id)
       flash("Ajout réussie.", category="success")
+      return redirect(request.path, code=302)
     except Exception as e :
       flash("Erreur lors de l'ajout.", category="danger")
       app.log_exception(e)
@@ -286,4 +287,39 @@ def change_availabilite():
     return redirect('/ingredient?success=1')
   except Exception as e:
     return redirect('/ingredient?success=0')
+
+
+@app.route('/edit_pizza/<int:pizza_id>', methods=['POST'])
+def edit_pizza(pizza_id):
+  if not session.get("user", {}).get("pizzaiolo"):
+    flash("Accès non autorisé.", category="danger")
+    return redirect("/pizza")
+
+  try:
+    connection = model.connect()
+
+    # Récupérer les données du formulaire
+    name = request.form.get('name')
+    price = request.form.get('price')
+    description = request.form.get('description')
+    ingredients = request.form.getlist('ingredients')  # Récupère tous les ingrédients cochés
+
+    # Mettre à jour la pizza
+    model.update_pizza(connection=connection, id=pizza_id, name=name, price=price, description=description)
+
+    # Supprimer les anciens ingrédients
+    model.delete_recette_pizza(connection=connection, id_pizza=pizza_id)
+
+    # Ajouter les nouveaux ingrédients
+    for ingredient_id in ingredients:
+      model.add_pizza_ingredient(connection=connection, id_pizza=pizza_id, id_ingredient=ingredient_id)
+
+    flash("Pizza modifiée avec succès.", category="success")
+
+  except Exception as e:
+    connection.rollback()
+    app.log_exception(e)
+    flash("Erreur lors de la modification de la pizza.", category="danger")
+
+  return redirect("/pizza")
 

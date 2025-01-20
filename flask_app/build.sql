@@ -33,4 +33,3 @@ CREATE TABLE recettes(
     FOREIGN KEY (id_ingredient) REFERENCES ingredients(id),
     PRIMARY KEY (id_pizza, id_ingredient)
 );
- 

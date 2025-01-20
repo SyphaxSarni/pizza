@@ -33,7 +33,12 @@ def create_database(connection):
   connection.commit()
 
 def pizzas(connection):
-  sql = 'SELECT * FROM pizzas ORDER BY id'
+  sql = """
+        SELECT p.*, GROUP_CONCAT(re.id_ingredient, ',') as ingredient_ids
+        FROM pizzas p
+        LEFT JOIN recettes re ON p.id = re.id_pizza
+        GROUP BY p.id
+  """
   cursor = connection.execute(sql)
   return cursor.fetchall()
 
@@ -162,6 +167,32 @@ def delete_pizza(connection, id):
     'id' : id
   })
   connection.commit()
+
+def delete_recette_pizza(connection, id_pizza):
+  sql = '''
+      DELETE FROM recettes
+      WHERE id_pizza = (:id_pizza)
+    '''
+  connection.execute(sql, {
+    'id_pizza': id_pizza
+  })
+  connection.commit()
+
+def update_pizza(connection, id, name, price, description):
+  # Mettre à jour la pizza
+  sql = '''
+    UPDATE pizzas 
+       SET name = :name, price = :price, description = :description 
+       WHERE id = :id
+  '''
+  connection.execute(sql, {
+    'name': name,
+    'price': price,
+    'description': description,
+    'id':id
+  })
+  connection.commit()
+
 
 def delete_ingredient(connection, id):
   sql = '''
