@@ -297,3 +297,19 @@ def get_last_id(connection, table):
 
   result = connection.execute(sql).fetchone()
   return result['max(id)']
+
+def get_pizzas_from_ingredients(connection, id_ingredient):
+  sql = """
+    SELECT DISTINCT p.*, GROUP_CONCAT(i.name) as ingredient_list 
+             FROM pizzas p
+             JOIN recettes r ON p.id = r.id_pizza
+             JOIN ingredients i ON r.id_ingredient = i.id
+             WHERE r.id_pizza IN (
+                 SELECT id_pizza 
+                 FROM recettes 
+                 WHERE id_ingredient = :id
+             )
+             GROUP BY p.id
+  """
+  rows = connection.execute(sql, {'id': id_ingredient}).fetchall()
+  return rows

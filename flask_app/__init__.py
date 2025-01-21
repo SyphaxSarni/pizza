@@ -6,7 +6,7 @@ from wtforms.widgets import CheckboxInput, ListWidget
 from flask_app import model
 import datetime
 from flask_wtf import CSRFProtect, FlaskForm
-from wtforms import BooleanField, StringField, SelectMultipleField, PasswordField, DateField, TimeField, IntegerField, EmailField, validators, FloatField, FieldList
+from wtforms import BooleanField, StringField, SelectMultipleField, PasswordField, SelectField, DateField, TimeField, IntegerField, EmailField, validators, FloatField, FieldList
 from flask_session import Session
 from functools import wraps
 from flask_talisman import Talisman
@@ -76,11 +76,6 @@ def ingredient():
       flash("Erreur lors de l'ajout.", category="danger")
       app.log_exception(e)
   return render_template('ingredient.html', ingredients=model.ingredients(connection), pizzaiolo=session["user"]["pizzaiolo"], form=form)
-
-@app.route('/recette/', methods=['GET'])
-def recette():
-    connection=model.connect()
-    return render_template('recette.html', recettes=model.recettes(connection))
 
 
 @app.route('/pizza/<int:pizza_id>', methods=['GET'])
@@ -321,3 +316,28 @@ def edit_pizza(pizza_id):
 
   return redirect("/pizza")
 
+
+class SearchForm(FlaskForm):
+  ingredient = SelectField('Ingrédient', coerce=int)
+
+
+# Dans routes.py
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+  connection = model.connect()
+  form = SearchForm()
+
+  # Charger la liste des ingrédients pour le select
+  ingredients = model.ingredients(connection)
+  form.ingredient.choices = [(i['id'], i['name']) for i in ingredients]
+
+  results = []
+  if form.validate_on_submit():
+    # Requête pour trouver les pizzas avec l'ingrédient sélectionné
+    results = model.get_pizzas_from_ingredients(connection, form.ingredient.data)
+
+  return render_template(
+    'recherche.html',
+    form=form,
+    results=results
+  )

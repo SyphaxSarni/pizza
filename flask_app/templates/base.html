@@ -5,28 +5,47 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
               rel="stylesheet"
               crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     </head>
     <body>
-        <nav class="navbar border-bottom shadow-sm p-3 px-md-4 mb-3">
+        <nav class="navbar navbar-expand-lg border-bottom shadow-sm p-3 px-md-4 mb-3">
             <div class="container">
                 <div class="navbar-brand">{{ self.title() }}</div>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <a class="nav-link" href="/">Home</a>
-                </ul>
-                {% if 'user' in session %}
-                <form method="POST" action="/logout">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                    <div class="btn-group">
-                        <a href="/change_password" class="btn btn-outline-secondary">Mot de passe</a>
-                        <a href="/create_user" class="btn btn-outline-secondary">Créer un utilisateur</a>
-                        <span class="btn btn-primary disabled">{{ session['user']['email'] }}</span>
-                        <button type="submit" class="btn btn-outline-primary">Déconnexion</button>
-                    </div>
-                </form>
-                {% else %}
-                <a class="btn btn-outline-primary" href="/login">Connexion</a>
-                {% endif %}
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Home</a>
+                        </li>
+                        {% if 'user' in session %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/ingredient">Ingredients</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pizza">Pizza</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/search">Rechercher</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+
+                    {% if 'user' in session %}
+                    <form method="POST" action="/logout">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="btn-group">
+                            <a href="/change_password" class="btn btn-outline-secondary">Mot de passe</a>
+                            {% if session['user']['pizzaiolo'] == 1 %}
+                            <a href="/create_user" class="btn btn-outline-secondary">Créer un utilisateur</a>
+                            {% endif %}
+                            <span class="btn btn-primary disabled">{{ session['user']['email'] }}</span>
+                            <button type="submit" class="btn btn-outline-primary">Déconnexion</button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <a class="btn btn-outline-primary" href="/login">Connexion</a>
+                    <a class="btn btn-outline-primary" href="/signin">Inscription</a>
+                    {% endif %}
+                </div>
             </div>
         </nav>
         <div class="container">

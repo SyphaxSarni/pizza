@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Recherche de pizzas{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Rechercher des pizzas par ingrédient</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="mb-4">
+                        {{ form.csrf_token }}
+                        <div class="row align-items-end">
+                            <div class="col">
+                                {{ form.ingredient.label(class="form-label") }}
+                                {{ form.ingredient(class="form-select") }}
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Rechercher</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% if results %}
+                        <h5 class="mb-3">Résultats de la recherche :</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Pizza</th>
+                                        <th>Prix</th>
+                                        <th>Description</th>
+                                        <th>Ingrédients</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for pizza in results %}
+                                    <tr>
+                                        <td>{{ pizza['name'] }}</td>
+                                        <td>{{ pizza['price'] }} €</td>
+                                        <td>{{ pizza['description'] }}</td>
+                                        <td>{{ pizza['ingredient_list'] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% elif request.method == 'POST' %}
+                        <div class="alert alert-info mt-3">
+                            Aucune pizza trouvée avec cet ingrédient.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
